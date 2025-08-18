@@ -1,23 +1,56 @@
-st.set_page_config(page_title="project D.A.R.E. , Be aware Be secure.")
+import streamlit as st
+from openai import OpenAI
+import os
 
-st.title("Drug Awareness And Risk Estimator")
-st.subheader("AI Based Assistant")
+openai_api_key = 
+client = OpenAI(api_key=openai_api_key)
 
-st.markdown("---")
+st.set_page_config(page_title="Drug Awareness App", layout="wide")
+st.title("💊 Drug Awareness & Support")
 
-st.header("Learn About Drugs : Most Used Substances Among Today's Gen Z")
-drug list={"Nicotine and Vaping"="Vaping is often perceived as less harmful than traditional smoking, which may explain its popularity among Gen Z. However, the high concentration of nicotine found in many vaping products can lead to addiction, cognitive impairment, and respiratory issues.",
-"Cannabis Use"="Cannabis (marijuana) remains one of the most commonly used substances among Gen Z, with a growing number of states legalizing its recreational use.While cannabis is often seen as a “safe” or “natural” drug, high-potency products and the frequent use of edibles and vapes can lead to increased risk of dependency, mental health issues (such as anxiety and psychosis), and cognitive impairments, especially for younger users whose brains are still developing.",
-"Prescription Drug Misuse"="Prescription drug misuse, particularly of opioids, benzodiazepines (such as Xanax), and stimulants (such as Adderall), is another concerning trend among Gen Z. Many young adults turn to prescription drugs for self-medication—using stimulants to cope with academic pressure or anxiety, or opioids and benzodiazepines to manage stress or trauma.",
-"Alcohol Use"="Although alcohol use has declined somewhat among Gen Z compared to previous generations, it remains one of the most widely abused substances. Data from the Centers for Disease Control and Prevention (CDC) shows that binge drinking is still a major concern, particularly among college students and young adults in social settings.",
-"Polysubstance Use"="A growing concern among substance use trends for Gen Z is the rise in polysubstance use—using more than one substance simultaneously or in close succession. This can involve mixing alcohol with cannabis, prescription drugs, or other substances, leading to dangerous interactions and an increased risk of overdose."}
+st.header("Common Drugs & Their Effects")
+drugs = {
+    "Cocaine": "A powerful stimulant that can cause addiction, heart problems, and anxiety.",
+    "Heroin": "An opioid that is highly addictive and can cause respiratory failure.",
+    "LSD": "A hallucinogen that can cause altered thoughts and dangerous behavior.",
+    "Methamphetamine": "A stimulant that can damage the brain and cause paranoia."
+}
 
-selected_drug=select.selecbox("select a drug to learn more :,list(drug_list.keys()))
-                              if selected drug:st.info(druglist_[selected_drug])
+for drug, info in drugs.items():
+    st.subheader(drug)
+    st.write(info)
 
-st.markdown(---)
-                              
-st.header("Addiction Risk Reader")
-            
-st.write("Ans a few questions to check your risk level:")
-            
+st.header("📝 Self-Assessment Quiz")
+score = 0
+q1 = st.radio("Do you or someone you know use drugs regularly?", ["yes", "no"])
+q2 = st.radio("Have you felt the need to cut down?", ["yes", "no"])
+q3 = st.radio("Have others expressed concern about your usage?", ["yes", "no"])
+
+if st.button("Check Risk Level"):
+    score = sum([q1 == "yes", q2 == "yes", q3 == "yes"])
+    if score >= 2:
+        st.error("High risk: Please seek help immediately.")
+    elif score == 1:
+        st.warning("Moderate risk: Monitor and consider talking to a counselor.")
+    else:
+        st.success("Low risk: Stay informed and healthy.")
+
+st.header("💬 Chat with Drug Awareness Bot")
+user_input = st.text_input("Ask me anything about drug safety:")
+
+if user_input:
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful drug awareness assistant."},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        st.write("**Bot:**", response.choices[0].message.content)
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+
+st.header("📞 Helpline Numbers")
+st.write("- India: 1800-11-0031 (Narcotics Control Bureau)")
+st.write("- local helplines : 100 ( police control room )")
