@@ -1,18 +1,6 @@
 import streamlit as st
 from openai import OpenAI
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-st.title("Chat with GPT")
-
-user_input = st.text_input("Ask me something:")
-
-if st.button("Send"):
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": user_input}]
-    )
-    st.write(response.choices[0].message.content)
 
 st.set_page_config(page_title="Drug Awareness App", layout="wide")
 st.title("💊 Drug Awareness & Support")
@@ -45,20 +33,22 @@ if st.button("Check Risk Level"):
         st.success("Low risk: Stay informed and healthy.")
 
 st.header("💬 Chat with Drug Awareness Bot")
-user_input = st.text_input("Ask me anything about drug safety:")
+user_input = st.text_input("Ask me anything about drug safety")
 
-if user_input:
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful drug awareness assistant."},
-                {"role": "user", "content": user_input}
-            ]
-        )
-        st.write("**Bot:**", response.choices[0].message.content)
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
+if st.button("Send"):
+    if user_input:
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful drug awareness assistant."},
+                    {"role": "user", "content": user_input}
+                ]
+            )
+            st.write("**Bot:**", response.choices[0].message.content)
+
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
 
 st.header("📞 Helpline Numbers")
 st.write("- India: 1800-11-0031 (Narcotics Control Bureau)")
