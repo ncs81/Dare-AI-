@@ -1,9 +1,15 @@
 import streamlit as st
 from openai import OpenAI
-import os
 
-openai_api_key = "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"
-client = OpenAI(api_key=openai_api_key)
+client = OpenAI(api_key=st.secrets["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"])
+
+response = client.chat.completions.create(
+    model="gpt-4.1-mini",
+    messages=[{"role": "user", "content": "Hello from Streamlit!"}]
+)
+
+st.write(response.choices[0].message.content)
+
 
 st.set_page_config(page_title="Drug Awareness App", layout="wide")
 st.title("💊 Drug Awareness & Support")
