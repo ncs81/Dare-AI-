@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import anthropic
 
 st.set_page_config(page_title="Drug Awareness App", layout="wide")
 st.title("💊 Drug Awareness & Support")
@@ -37,20 +37,18 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 st.title("💊 Drug Awareness Assistant")
 user_input = st.text_input("Ask me anything about drug awareness:")
 
-if st.button("Send"):
-    if user_input:
-        try:
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful drug awareness assistant."},
-                    {"role": "user", "content": user_input}
-                ]
-            )
-            st.write("**Bot:**", response.choices[0].message["content"])
 
-        except Exception as e:
-            st.error(f"Error: {str(e)}")
+client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
+
+response = client.messages.create(
+    model="claude-3-haiku-20240307",
+    max_tokens=500,
+    messages=[
+        {"role": "user", "content": user_input}
+    ]
+)
+st.write("**Bot:**", response.content[0].text)
+
 
 st.header("📞 Helpline Numbers")
 st.write("- India: 1800-11-0031 (Narcotics Control Bureau)")
