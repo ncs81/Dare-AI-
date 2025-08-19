@@ -30,14 +30,17 @@ if st.button("Check Risk Level"):
     elif score == 1:
         st.warning("Moderate risk: Monitor and consider talking to a counselor.")
     else:
-        st.success("Low risk: Stay informed and healthy.")
+        st.success("Low risk: Stay informed and healthy")
 
-st.header("💬 Chat with Drug Awareness Bot")
-user_input = st.text_input("Ask me anything about drug safety")
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+st.title("💊 Drug Awareness Assistant")
+user_input = st.text_input("Ask me anything about drug awareness:")
 
 if st.button("Send"):
     if user_input:
         try:
+        
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -45,10 +48,12 @@ if st.button("Send"):
                     {"role": "user", "content": user_input}
                 ]
             )
+            
             st.write("**Bot:**", response.choices[0].message.content)
 
         except Exception as e:
             st.error(f"Error: {str(e)}")
+
 
 st.header("📞 Helpline Numbers")
 st.write("- India: 1800-11-0031 (Narcotics Control Bureau)")
