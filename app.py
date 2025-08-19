@@ -3,13 +3,16 @@ from openai import OpenAI
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-response = client.chat.completions.create(
-    model="gpt-4.1-mini",
-    messages=[{"role": "user", "content": "Hello from Streamlit!"}]
-)
+st.title("Chat with GPT")
 
-st.write(response.choices[0].message.content)
+user_input = st.text_input("Ask me something:")
 
+if st.button("Send"):
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[{"role": "user", "content": user_input}]
+    )
+    st.write(response.choices[0].message.content)
 
 st.set_page_config(page_title="Drug Awareness App", layout="wide")
 st.title("💊 Drug Awareness & Support")
