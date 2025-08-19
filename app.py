@@ -1,7 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 
-client = OpenAI(api_key=st.secrets["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"])
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 response = client.chat.completions.create(
     model="gpt-4.1-mini",
