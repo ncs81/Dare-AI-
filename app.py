@@ -1,7 +1,6 @@
 import streamlit as st
 from openai import OpenAI
 
-
 st.set_page_config(page_title="Drug Awareness App", layout="wide")
 st.title("💊 Drug Awareness & Support")
 
@@ -32,6 +31,7 @@ if st.button("Check Risk Level"):
     else:
         st.success("Low risk: Stay informed and healthy")
 
+# Initialize OpenAI client (key from Streamlit secrets)
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.title("💊 Drug Awareness Assistant")
@@ -40,7 +40,6 @@ user_input = st.text_input("Ask me anything about drug awareness:")
 if st.button("Send"):
     if user_input:
         try:
-        
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -48,13 +47,11 @@ if st.button("Send"):
                     {"role": "user", "content": user_input}
                 ]
             )
-            
-            st.write("**Bot:**", response.choices[0].message.content)
+            st.write("**Bot:**", response.choices[0].message["content"])
 
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
-
 st.header("📞 Helpline Numbers")
 st.write("- India: 1800-11-0031 (Narcotics Control Bureau)")
-st.write("- local helplines : 100 ( police control room )")
+st.write("- Local helplines: 100 (Police control room)")
